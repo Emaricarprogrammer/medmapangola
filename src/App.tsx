@@ -5,7 +5,8 @@ import { routes } from "./routes"
 import { QueryClientProvider } from "@tanstack/react-query"
 import { queryClient } from "./services/react-query"
 import { CartProvider } from "./contexts/cart"
-import { MedicinesContextProvider } from "./contexts/deposit-meicines"
+import { MedicinesContextProvider } from "./contexts/deposit-medicines"
+import { OrdersNumberContextProvider } from "./contexts/pharmacy-orders"
 
 export function App() {
 	return (
@@ -22,7 +23,9 @@ export function App() {
 				<QueryClientProvider client={queryClient}>
 					<CartProvider>
 						<MedicinesContextProvider>
-							<RouterProvider router={routes} />
+							<OrdersNumberContextProvider>
+								<RouterProvider router={routes} />
+							</OrdersNumberContextProvider>
 						</MedicinesContextProvider>
 					</CartProvider>
 				</QueryClientProvider>

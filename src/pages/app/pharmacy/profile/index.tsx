@@ -87,9 +87,7 @@ export function PharmacyProfile() {
 												<Skeleton className="w-56 h-8 rounded-full" />
 											)}
 										</h2>
-										<p className="text-sm text-gray-500 mt-1">
-											Depósito Farmacêutico
-										</p>
+										<p className="text-sm text-gray-500 mt-1">Farmácia</p>
 									</div>
 								</div>
 

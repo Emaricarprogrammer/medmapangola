@@ -113,7 +113,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 	const { mutateAsync: registerOrderFn } = useMutation({
 		mutationFn: registerOrder,
 		onError(error: any) {
-			console.log(error.response.data.message)
+			toast.error(error.res.data.message)
 		},
 		onMutate() {
 			queryClient.invalidateQueries({ queryKey: ["orders"] })

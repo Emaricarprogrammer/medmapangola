@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button"
 import { DialogContent } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { z } from "zod"
@@ -37,8 +37,16 @@ export function EditProfileDialog() {
 		queryFn: getProfile,
 	})
 
+	const queryClient = useQueryClient()
+
 	const { mutateAsync: editProfileFn } = useMutation({
 		mutationFn: editProfile,
+		onSuccess() {
+			queryClient.invalidateQueries({
+				queryKey: ["profile"],
+				refetchType: "active",
+			})
+		},
 	})
 
 	const {
@@ -63,16 +71,13 @@ export function EditProfileDialog() {
 
 	const handleEditProfile = async (data: EditProfileFormData) => {
 		try {
-			// Criar payload apenas com campos alterados
 			const payload: Partial<EditProfileFormData> = {}
 
-			// Adicionar campos modificados
 			Object.keys(dirtyFields).forEach((key) => {
 				const field = key as keyof EditProfileFormData
 				const value = getValues(field)
 
 				if (value !== undefined) {
-					// Tratamento específico para cada tipo de campo
 					switch (field) {
 						case "numero":
 						case "contacto":
@@ -80,18 +85,15 @@ export function EditProfileDialog() {
 							break
 						case "password":
 						case "newPassword":
-							// Só adiciona se não for string vazia
 							if (value !== "") {
 								payload[field] = value as string
 							}
 							break
 						default:
-							// Para todos outros campos (string)
 							payload[field] = value as string
 					}
 				}
 			})
-			// Adicionar senhas apenas se foram preenchidas
 			if (data.password && data.newPassword) {
 				payload.password = data.password
 				payload.newPassword = data.newPassword

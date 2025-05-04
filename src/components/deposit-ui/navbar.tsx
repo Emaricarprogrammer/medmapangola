@@ -1,4 +1,4 @@
-import { MedicinesContext } from "@/contexts/deposit-meicines"
+import { MedicinesContext } from "@/contexts/deposit-medicines"
 import { House, Package, User } from "lucide-react"
 import { useContext } from "react"
 import { NavLink } from "react-router-dom"

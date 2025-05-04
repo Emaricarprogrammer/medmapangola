@@ -2,7 +2,7 @@ import { z } from "zod"
 
 export const registerMedicinalSchema = z.object({
 	imagem: z.instanceof(File).refine((file) => file.type.startsWith("image/"), {
-		message: "O arquivo deve ser uma imagem", // Corrected message
+		message: "O arquivo deve ser uma imagem",
 	}),
 
 	nome_comercial: z.string().min(3, "Preencha este campo!"),

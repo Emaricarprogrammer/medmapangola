@@ -19,22 +19,19 @@ import { priceFormatter } from "@/utils/formatter"
 interface Props {
 	order: {
 		id_aquisicao: string
-		data_aquisicao: string
 		status: "pendente" | "concluido" | "cancelado"
 		farmacia: {
-			id: string
 			nome: string
 			contacto: number
 		}
 		medicamentos: Medicamento[]
-		total_compra: number
 	}
 }
 export function OrdersDetails({ order }: Props) {
 	return (
 		<DialogContent>
 			<DialogHeader>
-				<DialogTitle>Pedido: {order.id_aquisicao}</DialogTitle>
+				<DialogTitle>Pedido: {order?.id_aquisicao}</DialogTitle>
 			</DialogHeader>
 			<DialogDescription>Detalhes do pedido</DialogDescription>
 
@@ -44,21 +41,21 @@ export function OrdersDetails({ order }: Props) {
 						<TableRow>
 							<TableCell className="text-muted-foreground">Status</TableCell>
 							<TableCell className="flex justify-end">
-								<OrderStatus status={order.status} />
+								<OrderStatus status={order?.status} />
 							</TableCell>
 						</TableRow>
 
 						<TableRow>
 							<TableCell className="text-muted-foreground">Cliente</TableCell>
 							<TableCell className="flex justify-end">
-								{order.farmacia.nome}
+								{order?.farmacia?.nome}
 							</TableCell>
 						</TableRow>
 
 						<TableRow>
 							<TableCell className="text-muted-foreground">Telefone</TableCell>
 							<TableCell className="flex justify-end">
-								+244 {order.farmacia.contacto}
+								+244 {order?.farmacia?.contacto}
 							</TableCell>
 						</TableRow>
 					</TableBody>
@@ -75,10 +72,10 @@ export function OrdersDetails({ order }: Props) {
 					</TableHeader>
 
 					<TableBody>
-						{order.medicamentos.map((medicamento) => {
+						{order?.medicamentos?.map((medicamento) => {
 							return (
 								<TableRow>
-									<TableCell>Paracetamol</TableCell>
+									<TableCell>{medicamento.nome_medicamento}</TableCell>
 									<TableCell className="text-center">
 										{medicamento.quantidade}
 									</TableCell>

@@ -141,7 +141,7 @@ export function VisitDeposit() {
 								: filteredMedicinals?.map((medicinal, index) => (
 										<motion.div
 											key={medicinal.id_medicamento}
-											variants={fadeIn("up", "spring", index * 0.1, 0.5)}
+											variants={fadeIn("right", "spring", index * 0.5, 0.8)}
 										>
 											<DepositMedicinalCard
 												key={medicinal.id_medicamento}
@@ -155,7 +155,7 @@ export function VisitDeposit() {
 							legend="Medicamentos"
 							currentPage={data?.pagination?.currentPage || 0}
 							totalItem={data?.pagination?.totalItems || 0}
-							perPage={data?.pagination.itemsPerPage || 0}
+							perPage={data?.pagination?.itemsPerPage || 0}
 						/>
 					</div>
 				</div>

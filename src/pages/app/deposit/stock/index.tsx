@@ -12,14 +12,24 @@ import { useQuery } from "@tanstack/react-query"
 import { getMedicinals } from "@/api/deposit/get-medicinals"
 import { MedicamentoTableRowSkeleton } from "./medicinals-skeleton"
 import { useContext, useEffect } from "react"
-import { MedicinesContext } from "@/contexts/deposit-meicines"
+import { MedicinesContext } from "@/contexts/deposit-medicines"
 import { EmptyMedicinesState } from "./empty-stock"
+import { jwtDecode } from "jwt-decode"
 
 export function Stock() {
+	const storedToken = localStorage.getItem("accessToken")
+
+	if (!storedToken || typeof storedToken !== "string") {
+		throw new Error("Token de autenticação ausente ou inválido")
+	}
+
+	const { id_entidade } = jwtDecode<any>(storedToken)
+
 	const { data, isFetching } = useQuery({
-		queryKey: ["my-medicines"],
+		queryKey: ["my-medicines", id_entidade],
 		queryFn: getMedicinals,
 	})
+
 	const { updateMedicines } = useContext(MedicinesContext)
 
 	useEffect(() => {
@@ -32,13 +42,13 @@ export function Stock() {
 
 			<div className="w-full">
 				<Toolbar
-					children={<Package className="text-emerald-700 h-6 w-6" />}
+					children={<Package className="text-amber-700 h-6 w-6" />}
 					legend="Stock"
 				/>
 
 				<div className="mt-10 flex items-center justify-between">
 					<h1 className="font-semibold px-1 flex items-center gap-1 text-neutral-700">
-						Adcionados Recentemente ({data?.response.length})
+						Adcionados Recentemente ({data?.response.length || 0})
 					</h1>
 
 					<RegisterMedDialog />

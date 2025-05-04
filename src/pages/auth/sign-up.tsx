@@ -23,9 +23,9 @@ import { jwtDecode } from "jwt-decode"
 
 export function SignUp() {
 	const { mutateAsync: signUpEntity } = useMutation({
-		mutationKey: ["sign-up"],
 		mutationFn: signUp,
 	})
+
 	const navigate = useNavigate()
 	const { stepForm, handleNext, handlePrevious, stepState } = useMultStepForm()
 

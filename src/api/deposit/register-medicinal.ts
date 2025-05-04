@@ -36,7 +36,6 @@ export async function registerMedicinal({ ...rest }: RegisterMedicinalBody) {
 	await api.post("/entity/deposit/medicines", formData, {
 		headers: {
 			Authorization: `Bearer ${storedToken}`,
-			// Do NOT set 'Content-Type'; browser sets 'multipart/form-data' automatically
 		},
 	})
 }

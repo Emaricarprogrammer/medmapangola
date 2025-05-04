@@ -37,7 +37,7 @@ export function Dashboard() {
 
 			<div className="w-full">
 				<Toolbar
-					children={<House className="text-emerald-700 h-6 w-6" />}
+					children={<House className="text-amber-600 h-6 w-6" />}
 					legend="Painel do Depósito"
 				/>
 
@@ -68,11 +68,11 @@ export function Dashboard() {
 									})}
 							</TableBody>
 						</Table>
-					</div>
 
-					{!isFetching && result?.response === undefined && (
-						<EmptyOrdersState />
-					)}
+						{!isFetching && result?.response === undefined && (
+							<EmptyOrdersState />
+						)}
+					</div>
 
 					<Pagination
 						currentPage={1}

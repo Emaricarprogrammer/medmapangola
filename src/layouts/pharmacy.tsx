@@ -47,11 +47,12 @@ export function PharmacyLayout() {
 
 	useEffect(() => {
 		async function Verify() {
-			await new Promise((resolve) => setTimeout(resolve, 4000))
+			await new Promise((resolve) => setTimeout(resolve, 2000))
 
 			if (!storedToken || typeof storedToken !== "string") {
 				navigate("/auth/entrar", { replace: true })
 				setIsLoading(false)
+				toast.warning("Sessão Expirada, Faça Login Novamente")
 				return
 			}
 
@@ -67,7 +68,6 @@ export function PharmacyLayout() {
 					setIsLoading(false)
 				}
 			} catch (error) {
-				console.error("Erro ao decodificar token:", error)
 				localStorage.removeItem("accessToken")
 				navigate("/auth/entrar", { replace: true })
 				setIsLoading(false)

@@ -5,15 +5,15 @@ import { OrderStatus } from "./order-status"
 import { OrdersStatusAction } from "./orders-status-action"
 import { Dialog, DialogTrigger } from "@/components/ui/dialog"
 import { OrdersDetails } from "./orders-details"
-import { Medicamento } from "@/api/deposit/get-medicinals"
 import { priceFormatter } from "@/utils/formatter"
 import { formatDistanceToNow } from "date-fns"
 import { pt } from "date-fns/locale"
+import { Medicamento } from "@/api/deposit/get-orders"
 
 interface Props {
 	order: {
 		id_aquisicao: string
-		data_aquisicao: "2025-05-03T13:12:57.567Z"
+		data_aquisicao: string
 		status: "pendente" | "concluido" | "cancelado"
 		farmacia: {
 			id: string
@@ -55,7 +55,7 @@ export function OrdersTableRow({ order }: Props) {
 				{priceFormatter.format(order.total_compra)}
 			</TableCell>
 			<TableCell className="py-4 max-xl:py-2">
-				{formatDistanceToNow(new Date(order?.data_aquisicao), {
+				{formatDistanceToNow(new Date(order.data_aquisicao), {
 					locale: pt,
 				})}
 			</TableCell>

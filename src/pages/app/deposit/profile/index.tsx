@@ -51,7 +51,7 @@ export function DepositProfile() {
 							animate={{ rotate: [0, 10, -10, 0] }}
 							transition={{ repeat: Infinity, duration: 2 }}
 						>
-							<User className="text-amber-700 h-6 w-6" />
+							<User className="text-amber-600 h-6 w-6" />
 						</motion.div>
 					}
 					legend="Perfil do Depósito"

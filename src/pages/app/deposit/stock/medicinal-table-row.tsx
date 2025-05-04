@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/dialog"
 import { TableRow, TableCell } from "@/components/ui/table"
 import { Image, Loader2, Trash2 } from "lucide-react"
-import { EditMedicinalDialog } from "./edit-medicinal-dialog"
 import { Medicamento } from "@/api/deposit/get-medicinals"
 import { priceFormatter } from "@/utils/formatter"
 import { differenceInDays, format, isValid, parseISO } from "date-fns"
@@ -16,6 +15,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { deleteMedicinal } from "@/api/deposit/delete-medicinal"
 import { toast } from "sonner"
+import { EditMedDialog } from "./edit-medicinal-dialog"
 
 interface Props {
 	medicamento: Medicamento
@@ -139,18 +139,7 @@ export function MedicinalTableRow({ medicamento }: Props) {
 						)}
 					</Button>
 
-					<Dialog>
-						<DialogTrigger asChild>
-							<Button
-								className="bg-transparent text-amber-600 hover:bg-transparent"
-								size="sm"
-							>
-								Editar
-							</Button>
-						</DialogTrigger>
-
-						<EditMedicinalDialog />
-					</Dialog>
+					<EditMedDialog medicamento={medicamento} />
 				</div>
 			</TableCell>
 		</TableRow>

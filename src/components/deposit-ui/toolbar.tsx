@@ -49,7 +49,7 @@ export function Toolbar({
 					<motion.div
 						className={cn(
 							"w-3 h-3 rounded-full",
-							isOnline ? "bg-emerald-500" : "bg-gray-400"
+							isOnline ? "bg-amber-500" : "bg-gray-400"
 						)}
 						animate={{
 							scale: [1, 1.2, 1],
@@ -64,7 +64,7 @@ export function Toolbar({
 
 				{isOnline && (
 					<motion.span
-						className="px-2 py-1 text-xs rounded-full bg-emerald-100 text-emerald-800"
+						className="px-2 py-1 text-xs rounded-full bg-amber-100 text-amber-800"
 						initial={{ scale: 0 }}
 						animate={{ scale: 1 }}
 					>

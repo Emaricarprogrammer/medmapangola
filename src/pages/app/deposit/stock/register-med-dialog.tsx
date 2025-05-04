@@ -35,23 +35,25 @@ export function RegisterMedDialog() {
 	const [modalState, setModalState] = useState<boolean>(false)
 
 	const queryClient = useQueryClient()
+	const storedToken = localStorage.getItem("accessToken")
+	if (!storedToken || typeof storedToken !== "string") {
+		throw new Error("Token de autenticação ausente ou inválido")
+	}
+	const { id_entidade: id_entidade_fk } = jwtDecode<any>(storedToken)
 
 	const { mutateAsync: registerMedicinalFn } = useMutation({
 		mutationFn: registerMedicinal,
 		onSuccess() {
-			queryClient.invalidateQueries({ queryKey: ["my-medicines"] })
+			queryClient.invalidateQueries({
+				queryKey: ["my-medicines", id_entidade_fk || 0],
+				refetchType: "active",
+			})
 			setModalState(false)
 		},
 		onError(error: any) {
 			toast.error(error?.response?.data?.message)
 		},
 	})
-
-	const storedToken = localStorage.getItem("accessToken")
-	if (!storedToken || typeof storedToken !== "string") {
-		throw new Error("Token de autenticação ausente ou inválido")
-	}
-	const { id_entidade: id_entidade_fk } = jwtDecode<any>(storedToken)
 
 	async function handleRegisterNewMedicinal({
 		categoria_medicamento,

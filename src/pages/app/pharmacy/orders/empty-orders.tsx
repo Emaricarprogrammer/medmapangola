@@ -1,7 +1,9 @@
-import { PackageSearch } from "lucide-react"
+import { ShoppingCart } from "lucide-react"
 import { motion } from "framer-motion"
+import { Button } from "@/components/ui/button"
+import { Link } from "react-router-dom"
 
-export function EmptyMedicinesState() {
+export function EmptyOrdersState() {
 	return (
 		<motion.div
 			className="flex flex-col items-center justify-center py-12 px-4 text-center"
@@ -9,8 +11,8 @@ export function EmptyMedicinesState() {
 			animate={{ opacity: 1 }}
 			transition={{ duration: 0.5 }}
 		>
-			<div className="bg-amber-50 p-6 rounded-full mb-6">
-				<PackageSearch className="h-12 w-12 text-amber-600" />
+			<div className="bg-emerald-50 p-6 rounded-full mb-6">
+				<ShoppingCart className="h-12 w-12 text-emerald-600" />
 			</div>
 
 			<motion.h3
@@ -18,7 +20,7 @@ export function EmptyMedicinesState() {
 				initial={{ y: 20 }}
 				animate={{ y: 0 }}
 			>
-				Nenhum medicamento cadastrado
+				Nenhuma encomenda feita!
 			</motion.h3>
 
 			<motion.p
@@ -27,8 +29,7 @@ export function EmptyMedicinesState() {
 				animate={{ y: 0 }}
 				transition={{ delay: 0.1 }}
 			>
-				Você ainda não possui medicamentos em seu estoque. Cadastre seu primeiro
-				medicamento para começar.
+				Parece que não fez nenhuma encomenda
 			</motion.p>
 
 			<motion.div
@@ -37,7 +38,11 @@ export function EmptyMedicinesState() {
 				transition={{ delay: 0.2 }}
 				whileHover={{ scale: 1.02 }}
 				whileTap={{ scale: 0.98 }}
-			></motion.div>
+			>
+				<Button className="bg-emerald-500 rounded-full">
+					<Link to="/farmacia">Começar</Link>
+				</Button>
+			</motion.div>
 		</motion.div>
 	)
 }
