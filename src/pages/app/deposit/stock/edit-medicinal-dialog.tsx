@@ -39,7 +39,7 @@ export function EditMedDialog({ medicamento }: Props) {
       nome_comercial: medicamento.nome_comercial,
       nome_generico: medicamento.nome_generico,
       origem_medicamento: medicamento.origem,
-      validade_medicamento: medicamento.validade,
+      validade_medicamento: format(new Date(medicamento.validade), "yyyy-MM-dd"),
       preco_medicamento: medicamento.preco,
       quantidade_disponivel: medicamento.quantidade_disponivel,
       categoria_medicamento: medicamento.categoria,
@@ -85,10 +85,7 @@ export function EditMedDialog({ medicamento }: Props) {
   const handleImageUpload = async (file: File) => {
     setIsUploading(true)
     try {
-      // Aqui você deve implementar o upload real para seu servidor
-      // Esta é uma simulação que cria uma URL local para a imagem
       const imageUrl = URL.createObjectURL(file)
-      
       setValue("imagem_url", imageUrl, { shouldValidate: true })
       setImageFile(file)
       toast.success("Imagem carregada com sucesso!")
@@ -113,16 +110,11 @@ export function EditMedDialog({ medicamento }: Props) {
 
   const onSubmit = handleSubmit(async (formData) => {
     try {
-      // Aqui você deve substituir pela lógica real de upload
-      // Se houver um arquivo selecionado, faça o upload primeiro
       let finalImageUrl = formData.imagem_url
       
       if (imageFile) {
-        // Simulando upload - substitua pela sua API real
         setIsUploading(true)
         await new Promise(resolve => setTimeout(resolve, 1000))
-        // Em produção, você enviaria o arquivo para seu servidor
-        // e receberia a URL da imagem
         finalImageUrl = URL.createObjectURL(imageFile)
       }
 
@@ -132,7 +124,7 @@ export function EditMedDialog({ medicamento }: Props) {
         nome_generico_medicamento: formData.nome_generico,
         nome_comercial_medicamento: formData.nome_comercial,
         origem_medicamento: formData.origem_medicamento,
-        validade_medicamento: formData.validade_medicamento,
+        validade_medicamento: `${formData.validade_medicamento}T00:00:00.000Z`,
         preco_medicamento: formData.preco_medicamento,
         imagem_url: finalImageUrl,
         quantidade_disponivel_medicamento: formData.quantidade_disponivel,
@@ -156,24 +148,24 @@ export function EditMedDialog({ medicamento }: Props) {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-4xl rounded-lg">
+      <DialogContent className="max-w-[95vw] sm:max-w-4xl rounded-lg">
         <DialogHeader className="border-b pb-4">
-          <DialogTitle className="text-2xl font-semibold text-gray-800">
+          <DialogTitle className="text-xl sm:text-2xl font-semibold text-gray-800">
             Editar Medicamento
           </DialogTitle>
-          <p className="text-sm text-gray-500">{medicamento.nome_comercial}</p>
+          <p className="text-xs sm:text-sm text-gray-500">{medicamento.nome_comercial}</p>
         </DialogHeader>
 
-        <form onSubmit={onSubmit} className="mt-4 flex flex-col gap-6">
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-6 lg:flex-row">
-              {/* Seção da Imagem */}
+        <form onSubmit={onSubmit} className="mt-4 flex flex-col gap-4 sm:gap-6">
+          <div className="flex flex-col gap-4 sm:gap-6">
+            <div className="flex flex-col gap-4 sm:gap-6 lg:flex-row">
+              {/* Seção da Imagem - Responsiva */}
               <div className="w-full lg:w-1/3">
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   <div className="space-y-2">
-                    <Label className="text-gray-700">Imagem do Medicamento</Label>
+                    <Label className="text-sm sm:text-base text-gray-700">Imagem do Medicamento</Label>
                     <div 
-                      className="relative aspect-square overflow-hidden rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 cursor-pointer"
+                      className="relative aspect-square overflow-hidden rounded-lg sm:rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 cursor-pointer"
                       onClick={triggerFileInput}
                     >
                       {imagem_url ? (
@@ -184,8 +176,8 @@ export function EditMedDialog({ medicamento }: Props) {
                           onError={() => setValue("imagem_url", "", { shouldValidate: true })}
                         />
                       ) : (
-                        <div className="flex h-full flex-col items-center justify-center text-gray-400 p-4 text-center">
-                          <UploadCloud className="h-8 w-8 mb-2" />
+                        <div className="flex h-full flex-col items-center justify-center text-gray-400 p-2 sm:p-4 text-center text-xs sm:text-sm">
+                          <UploadCloud className="h-6 w-6 sm:h-8 sm:w-8 mb-1 sm:mb-2" />
                           <span>Clique para adicionar uma imagem</span>
                         </div>
                       )}
@@ -207,35 +199,35 @@ export function EditMedDialog({ medicamento }: Props) {
                         variant="outline"
                         onClick={triggerFileInput}
                         disabled={isUploading}
-                        className="flex items-center justify-center gap-2"
+                        className="flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm"
                       >
                         {isUploading ? (
-                          <Loader2 className="h-4 w-4 animate-spin" />
+                          <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
                         ) : (
-                          <UploadCloud className="h-4 w-4" />
+                          <UploadCloud className="h-3 w-3 sm:h-4 sm:w-4" />
                         )}
                         <span>{imageFile ? "Alterar imagem" : "Selecionar imagem"}</span>
                       </Button>
                       {imageFile && (
-                        <p className="text-sm text-gray-500 truncate">
+                        <p className="text-xs sm:text-sm text-gray-500 truncate">
                           Arquivo: {imageFile.name}
                         </p>
                       )}
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="imagem_url" className="text-gray-700">
+                  <div className="space-y-1 sm:space-y-2">
+                    <Label htmlFor="imagem_url" className="text-xs sm:text-sm text-gray-700">
                       Ou informe a URL da imagem
                     </Label>
                     <Input
                       id="imagem_url"
                       {...register("imagem_url")}
                       placeholder="https://exemplo.com/imagem.jpg"
-                      className="focus:ring-amber-500 focus:border-amber-500"
+                      className="text-xs sm:text-sm focus:ring-amber-500 focus:border-amber-500 h-8 sm:h-10"
                     />
                     {errors.imagem_url && (
-                      <p className="text-sm text-red-600">
+                      <p className="text-xs sm:text-sm text-red-600">
                         {errors.imagem_url.message}
                       </p>
                     )}
@@ -243,83 +235,88 @@ export function EditMedDialog({ medicamento }: Props) {
                 </div>
               </div>
 
-              {/* Seção dos Dados */}
+              {/* Seção dos Dados - Responsiva */}
               <div className="w-full lg:w-2/3">
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="nome_comercial" className="text-gray-700">
+                <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
+                  {/* Nome Comercial */}
+                  <div className="space-y-1 sm:space-y-2">
+                    <Label htmlFor="nome_comercial" className="text-xs sm:text-sm text-gray-700">
                       Nome Comercial*
                     </Label>
                     <Input
                       id="nome_comercial"
                       {...register("nome_comercial")}
                       placeholder="Ex: Paracetamol"
-                      className="focus:ring-amber-500 focus:border-amber-500"
+                      className="text-xs sm:text-sm focus:ring-amber-500 focus:border-amber-500 h-8 sm:h-10"
                     />
                     {errors.nome_comercial && (
-                      <p className="text-sm text-red-600">
+                      <p className="text-xs sm:text-sm text-red-600">
                         {errors.nome_comercial.message}
                       </p>
                     )}
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="nome_generico" className="text-gray-700">
+                  {/* Nome Genérico */}
+                  <div className="space-y-1 sm:space-y-2">
+                    <Label htmlFor="nome_generico" className="text-xs sm:text-sm text-gray-700">
                       Nome Genérico*
                     </Label>
                     <Input
                       id="nome_generico"
                       {...register("nome_generico")}
                       placeholder="Ex: Acetaminofeno"
-                      className="focus:ring-amber-500 focus:border-amber-500"
+                      className="text-xs sm:text-sm focus:ring-amber-500 focus:border-amber-500 h-8 sm:h-10"
                     />
                     {errors.nome_generico && (
-                      <p className="text-sm text-red-600">
+                      <p className="text-xs sm:text-sm text-red-600">
                         {errors.nome_generico.message}
                       </p>
                     )}
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="origem_medicamento" className="text-gray-700">
+                  {/* Origem */}
+                  <div className="space-y-1 sm:space-y-2">
+                    <Label htmlFor="origem_medicamento" className="text-xs sm:text-sm text-gray-700">
                       Origem*
                     </Label>
                     <Input
                       id="origem_medicamento"
                       {...register("origem_medicamento")}
                       placeholder="Ex: Portugal"
-                      className="focus:ring-amber-500 focus:border-amber-500"
+                      className="text-xs sm:text-sm focus:ring-amber-500 focus:border-amber-500 h-8 sm:h-10"
                     />
                     {errors.origem_medicamento && (
-                      <p className="text-sm text-red-600">
+                      <p className="text-xs sm:text-sm text-red-600">
                         {errors.origem_medicamento.message}
                       </p>
                     )}
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="validade_medicamento" className="text-gray-700">
+                  {/* Validade */}
+                  <div className="space-y-1 sm:space-y-2">
+                    <Label htmlFor="validade_medicamento" className="text-xs sm:text-sm text-gray-700">
                       Validade*
                     </Label>
                     <Input
                       id="validade_medicamento"
                       type="date"
                       {...register("validade_medicamento")}
-                      className="focus:ring-amber-500 focus:border-amber-500"
+                      className="text-xs sm:text-sm focus:ring-amber-500 focus:border-amber-500 h-8 sm:h-10"
                     />
                     {errors.validade_medicamento && (
-                      <p className="text-sm text-red-600">
+                      <p className="text-xs sm:text-sm text-red-600">
                         {errors.validade_medicamento.message}
                       </p>
                     )}
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="preco_medicamento" className="text-gray-700">
+                  {/* Preço Unitário */}
+                  <div className="space-y-1 sm:space-y-2">
+                    <Label htmlFor="preco_medicamento" className="text-xs sm:text-sm text-gray-700">
                       Preço Unitário*
                     </Label>
                     <div className="relative">
-                      <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                      <span className="absolute inset-y-0 left-0 flex items-center pl-2 text-gray-500 text-xs sm:text-sm">
                         R$
                       </span>
                       <Input
@@ -328,18 +325,19 @@ export function EditMedDialog({ medicamento }: Props) {
                         step="0.01"
                         {...register("preco_medicamento", { valueAsNumber: true })}
                         placeholder="0.00"
-                        className="pl-8 focus:ring-amber-500 focus:border-amber-500"
+                        className="text-xs sm:text-sm pl-6 sm:pl-8 focus:ring-amber-500 focus:border-amber-500 h-8 sm:h-10"
                       />
                     </div>
                     {errors.preco_medicamento && (
-                      <p className="text-sm text-red-600">
+                      <p className="text-xs sm:text-sm text-red-600">
                         {errors.preco_medicamento.message}
                       </p>
                     )}
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="quantidade_disponivel" className="text-gray-700">
+                  {/* Quantidade Disponível */}
+                  <div className="space-y-1 sm:space-y-2">
+                    <Label htmlFor="quantidade_disponivel" className="text-xs sm:text-sm text-gray-700">
                       Quantidade Disponível*
                     </Label>
                     <Input
@@ -347,27 +345,28 @@ export function EditMedDialog({ medicamento }: Props) {
                       type="number"
                       {...register("quantidade_disponivel", { valueAsNumber: true })}
                       placeholder="Ex: 100"
-                      className="focus:ring-amber-500 focus:border-amber-500"
+                      className="text-xs sm:text-sm focus:ring-amber-500 focus:border-amber-500 h-8 sm:h-10"
                     />
                     {errors.quantidade_disponivel && (
-                      <p className="text-sm text-red-600">
+                      <p className="text-xs sm:text-sm text-red-600">
                         {errors.quantidade_disponivel.message}
                       </p>
                     )}
                   </div>
 
-                  <div className="space-y-2 md:col-span-2">
-                    <Label htmlFor="categoria_medicamento" className="text-gray-700">
+                  {/* Categoria */}
+                  <div className="space-y-1 sm:space-y-2 md:col-span-2">
+                    <Label htmlFor="categoria_medicamento" className="text-xs sm:text-sm text-gray-700">
                       Categoria*
                     </Label>
                     <Input
                       id="categoria_medicamento"
                       {...register("categoria_medicamento")}
                       placeholder="Ex: Analgésico"
-                      className="focus:ring-amber-500 focus:border-amber-500"
+                      className="text-xs sm:text-sm focus:ring-amber-500 focus:border-amber-500 h-8 sm:h-10"
                     />
                     {errors.categoria_medicamento && (
-                      <p className="text-sm text-red-600">
+                      <p className="text-xs sm:text-sm text-red-600">
                         {errors.categoria_medicamento.message}
                       </p>
                     )}
@@ -376,20 +375,21 @@ export function EditMedDialog({ medicamento }: Props) {
               </div>
             </div>
 
-            <div className="flex justify-end border-t pt-4">
+            {/* Botão de Submit - Responsivo */}
+            <div className="flex justify-end border-t pt-3 sm:pt-4">
               <Button
                 type="submit"
                 disabled={isSubmitting || isUploading}
-                className="w-full sm:w-auto px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg shadow-sm transition-colors duration-200"
+                className="w-full sm:w-auto px-4 py-2 sm:px-6 sm:py-3 text-xs sm:text-sm bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-md sm:rounded-lg shadow-sm transition-colors duration-200"
               >
                 {isSubmitting || isUploading ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    {isUploading ? "Enviando imagem..." : "Salvando..."}
+                    <Loader2 className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
+                    {isUploading ? "Enviando..." : "Salvando..."}
                   </>
                 ) : (
                   <>
-                    <SaveAllIcon className="mr-2 h-4 w-4" />
+                    <SaveAllIcon className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                     Salvar Alterações
                   </>
                 )}

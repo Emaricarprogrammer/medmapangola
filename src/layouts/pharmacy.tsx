@@ -58,7 +58,10 @@ export function PharmacyLayout() {
 
 			try {
 				const { access_level } = jwtDecode<any>(storedToken)
-				if (access_level === "farmacia" || access_level === "deposito") {
+				if (access_level === "farmacia") {
+					setIsLoading(false)
+				} else if (access_level === "deposito") {
+					navigate("/deposito", { replace: true })
 					setIsLoading(false)
 				} else if (access_level === "admin") {
 					navigate("/administrador", { replace: true })
@@ -71,6 +74,7 @@ export function PharmacyLayout() {
 				localStorage.removeItem("accessToken")
 				navigate("/auth/entrar", { replace: true })
 				setIsLoading(false)
+				toast.error("Token inválido")
 			}
 		}
 
@@ -106,13 +110,21 @@ export function PharmacyLayout() {
 
 	try {
 		const { access_level } = jwtDecode<any>(storedToken)
-		if (access_level !== "farmacia" && access_level !== "deposito") {
-			navigate("/auth/entrar", { replace: true })
+		if (access_level !== "farmacia") {
+			if (access_level === "deposito") {
+				navigate("/deposito", { replace: true })
+			} else if (access_level === "admin") {
+				navigate("/administrador", { replace: true })
+			} else {
+				navigate("/auth/entrar", { replace: true })
+				toast.error("Nível de acesso inválido")
+			}
 			return null
 		}
 	} catch (error) {
 		localStorage.removeItem("accessToken")
 		navigate("/auth/entrar", { replace: true })
+		toast.error("Token inválido")
 		return null
 	}
 

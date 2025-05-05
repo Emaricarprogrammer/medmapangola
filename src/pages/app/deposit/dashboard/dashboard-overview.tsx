@@ -1,74 +1,87 @@
-import { getDeposit } from "@/api/pharmacy/get-deposit"
 import { Card } from "@/components/ui/card"
 import { useQuery } from "@tanstack/react-query"
-import { jwtDecode } from "jwt-decode"
 import { Package, Phone, MapPin, Map } from "lucide-react"
 import { EmptyProfile } from "./empty-profile"
+import { getDepositDatas } from "@/api/deposit/get-datas"
 
 export function DashboardOverview() {
-	const storedToken = localStorage.getItem("accessToken")
-	if (!storedToken || typeof storedToken !== "string") {
-		throw new Error("Token de autenticação ausente ou inválido")
-	}
-	const { id_entidade } = jwtDecode<any>(storedToken)
+  const { data, isLoading } = useQuery({
+    queryKey: ["depositData"],
+    queryFn: getDepositDatas,
+  })
 
-	const { data, isFetching } = useQuery({
-		queryKey: ["deposit", { depsitId: id_entidade }],
-		queryFn: async () => {
-			if (!id_entidade) return
-			return getDeposit(id_entidade)
-		},
-		enabled: !!id_entidade,
-	})
+  if (isLoading) {
+    return <EmptyProfile />
+  }
 
-	if (isFetching) {
-		return <EmptyProfile />
-	}
+  if (!data?.response) {
+    return <div className="text-center py-8 text-muted-foreground">Nenhum dado de depósito disponível</div>
+  }
 
-	return (
-		<div className="grid grid-cols-4 gap-4 max-xl:grid-cols-2 max-sm:hidden">
-			<Card className="p-5 flex flex-col gap-2 rounded-lg shadow-sm justify-between text-foreground">
-				<strong className="flex">
-					{data?.response?.medicamentos_deposito?.length}
-				</strong>
-				<div className="font-light text-sm flex items-center justify-between">
-					<span>Unidade de Medicamentos</span>
-					<Package className="w-4 h-4 max-sm:hidden" />
-				</div>
-			</Card>
+  const depositData = data.response
 
-			<Card className="p-5 flex flex-col gap-2 shadow-sm rounded-lg justify-between text-foreground">
-				<strong className="flex">
-					{data?.response.pais}, {data?.response.cidade}
-				</strong>
-				<div className=" font-light text-sm flex items-center justify-between">
-					<span>Localização</span>
-					<Map className="w-4 h-4 max-sm:hidden" />
-				</div>
-			</Card>
+  return (
+    <div className="grid grid-cols-4 gap-4 max-xl:grid-cols-2 max-sm:grid-cols-1 max-sm:gap-3">
+      {/* Medication Count Card */}
+      <Card className="p-5 flex flex-col gap-3 rounded-lg border-border/50 hover:border-primary/30 transition-colors group">
+        <div className="flex items-center justify-between">
+          <strong className="text-2xl font-semibold text-primary">
+            {depositData.total_medicamentos}
+          </strong>
+          <div className="p-2 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
+            <Package className="w-5 h-5 text-primary" />
+          </div>
+        </div>
+        <span className="text-sm font-medium text-muted-foreground">Unidades de Medicamentos</span>
+      </Card>
 
-			<Card className="p-5 flex flex-col gap-2 shadow-sm rounded-lg justify-between text-foreground">
-				<strong className="flex">+244 {data?.response.contacto}</strong>
-				<div className="font-light text-sm flex items-center justify-between">
-					<span>Contacto</span>
-					<Phone className="w-4 h-4 max-sm:hidden" />
-				</div>
-			</Card>
+      {/* Location Card */}
+      <Card className="p-5 flex flex-col gap-3 rounded-lg border-border/50 hover:border-primary/30 transition-colors group">
+        <div className="flex items-center justify-between">
+          <strong className="text-xl font-semibold">
+            {depositData.cidade}
+          </strong>
+          <div className="p-2 rounded-full bg-blue-500/10 group-hover:bg-blue-500/20 transition-colors">
+            <Map className="w-5 h-5 text-blue-500" />
+          </div>
+        </div>
+        <span className="text-sm font-medium text-muted-foreground">
+          {depositData.rua}, {depositData.numero} • {depositData.logradouro}
+        </span>
+      </Card>
 
-			<Card className="p-5 flex flex-col gap-2 shadow-sm rounded-lg justify-between text-foreground">
-				<div className="flex">
-					<strong className="flex">
-						-{data?.response.geolocalizacao_deposito.longitude}/Log
-					</strong>
-					<strong className="flex">
-						-{data?.response.geolocalizacao_deposito.latitude}/Log
-					</strong>
-				</div>
-				<div className=" font-light text-sm flex items-center justify-between">
-					<span>Geolocalização</span>
-					<MapPin className="w-4 h-4 max-sm:hidden" />
-				</div>
-			</Card>
-		</div>
-	)
+      {/* Contact Card */}
+      <Card className="p-5 flex flex-col gap-3 rounded-lg border-border/50 hover:border-primary/30 transition-colors group">
+        <div className="flex items-center justify-between">
+          <strong className="text-xl font-semibold text-foreground">
+            +244 {depositData.contacto}
+          </strong>
+          <div className="p-2 rounded-full bg-green-500/10 group-hover:bg-green-500/20 transition-colors">
+            <Phone className="w-5 h-5 text-green-500" />
+          </div>
+        </div>
+        <span className="text-sm font-medium text-muted-foreground">Contacto do Depósito</span>
+      </Card>
+
+      {/* Geolocation Card */}
+      <Card className="p-5 flex flex-col gap-3 rounded-lg border-border/50 hover:border-primary/30 transition-colors group">
+        <div className="flex items-center justify-between">
+          <div className="flex flex-col">
+            <strong className="text-sm font-medium">
+              <span className="text-muted-foreground">Long: </span>
+              {depositData.geolocalizacao_deposito.longitude.toFixed(4)}
+            </strong>
+            <strong className="text-sm font-medium">
+              <span className="text-muted-foreground">Lat: </span>
+              {depositData.geolocalizacao_deposito.latitude.toFixed(4)}
+            </strong>
+          </div>
+          <div className="p-2 rounded-full bg-amber-500/10 group-hover:bg-amber-500/20 transition-colors">
+            <MapPin className="w-5 h-5 text-amber-500" />
+          </div>
+        </div>
+        <span className="text-sm font-medium text-muted-foreground">Geolocalização</span>
+      </Card>
+    </div>
+  )
 }

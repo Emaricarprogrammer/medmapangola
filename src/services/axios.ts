@@ -1,6 +1,6 @@
 import axios from "axios"
 
 export const api = axios.create({
-	baseURL: "http://localhost:3000/medmapangola.ao",
+	baseURL: "https://api-medmapangola.onrender.com/medmapangola.ao",
 	withCredentials: true,
 })
